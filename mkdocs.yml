@@ -35,6 +35,7 @@ plugins:
         - matplotlib
         - mayavi
         - pyvista
+        - vedo
       compress_images: ['images', 'thumbnails']
       # specify the order of examples to be according to filename
       within_subsection_order: FileNameSortKey

@@ -212,6 +212,7 @@ MKDOCS_GALLERY_EXAMPLES_REQS = [
     "plotly",
     "pyvista",
     "imageio",
+    "vedo",
     # "memory_profiler",
     "pillow",  # PIL, required for image rescaling
 ]
