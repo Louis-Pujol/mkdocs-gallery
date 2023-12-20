@@ -35,6 +35,7 @@ __all__ = [
     "matplotlib_scraper",
     "mayavi_scraper",
     "pyvista_scraper",
+    "vedo_scraper",
 ]
 
 
@@ -373,11 +374,49 @@ def pyvista_scraper(block, script: GalleryScript):
     pv.close_all()  # close and clear all plotters
     return figure_md_or_html(image_paths, script)
 
+def vedo_scraper(block, script: GalleryScript):
+    """Scrape vedo image.
+
+    Parameters
+    ----------
+    block : tuple
+        A tuple containing the (label, content, line_number) of the block.
+
+    script : GalleryScript
+        Script being run
+
+    Returns
+    -------
+    md : str
+        The ReSTructuredText that will be rendered to HTML containing
+        the images. This is often produced by :func:`figure_md_or_html`.
+    """
+
+    import vedo
+    plotter = vedo.plotter_instance
+
+    if plotter is not None:
+
+        if not plotter.offscreen:
+            raise RuntimeError("set vedo.plotter.offscreen=True to"
+                               + " use the vedo image scraper.")
+
+        image_paths = list()
+        fname = next(script.run_vars.image_path_iterator)
+        plotter.screenshot(fname)
+        image_paths.append(fname)
+        plotter.close()
+        return figure_md_or_html(image_paths, script)
+    
+    else:
+        return figure_md_or_html(list(), script)
+
 
 _scraper_dict = dict(
     matplotlib=matplotlib_scraper,
     mayavi=mayavi_scraper,
     pyvista=pyvista_scraper,
+    vedo=vedo_scraper,
 )
 
 
