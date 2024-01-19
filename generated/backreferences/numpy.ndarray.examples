@@ -1,0 +1,88 @@
+
+
+Examples using ``numpy.ndarray``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+<div class="mkd-glr-thumbcontainer" tooltip="This is a general example demonstrating a Matplotlib plot output, embedded Markdown, the use of...">
+    <!--div class="figure align-default" id="id1"-->
+        <img alt="Introductory example - Plotting sin" src="images/thumb/mkd_glr_plot_00_sin_thumb.png" />
+        <p class="caption">
+            <span class="caption-text">
+                <a class="reference internal" href="plot_00_sin">
+                    <span class="std std-ref">Introductory example - Plotting sin</span>
+                </a>
+            </span>
+            <!--a class="headerlink" href="#id1" title="Permalink to this image"></a-->
+        </p>
+    <!--/div-->
+</div>
+
+<div class="mkd-glr-thumbcontainer" tooltip="This example demonstrates a Seaborn plot. Figures produced Matplotlib **and** by any package th...">
+    <!--div class="figure align-default" id="id1"-->
+        <img alt="Seaborn example" src="images/thumb/mkd_glr_plot_02_seaborn_thumb.png" />
+        <p class="caption">
+            <span class="caption-text">
+                <a class="reference internal" href="plot_02_seaborn">
+                    <span class="std std-ref">Seaborn example</span>
+                </a>
+            </span>
+            <!--a class="headerlink" href="#id1" title="Permalink to this image"></a-->
+        </p>
+    <!--/div-->
+</div>
+
+<div class="mkd-glr-thumbcontainer" tooltip="This example demonstrates how to provide a figure that is displayed as the thumbnail. This is d...">
+    <!--div class="figure align-default" id="id1"-->
+        <img alt="Providing a figure for the thumbnail image" src="images/thumb/mkd_glr_plot_04b_provide_thumbnail_thumb.png" />
+        <p class="caption">
+            <span class="caption-text">
+                <a class="reference internal" href="plot_04b_provide_thumbnail">
+                    <span class="std std-ref">Providing a figure for the thumbnail image</span>
+                </a>
+            </span>
+            <!--a class="headerlink" href="#id1" title="Permalink to this image"></a-->
+        </p>
+    <!--/div-->
+</div>
+
+<div class="mkd-glr-thumbcontainer" tooltip="This example demonstrates how to include non-ASCII characters, mostly emoji 🎉 to stress test th...">
+    <!--div class="figure align-default" id="id1"-->
+        <img alt="Using Unicode everywhere 🤗" src="images/thumb/mkd_glr_plot_05_unicode_everywhere_thumb.png" />
+        <p class="caption">
+            <span class="caption-text">
+                <a class="reference internal" href="plot_05_unicode_everywhere">
+                    <span class="std std-ref">Using Unicode everywhere 🤗</span>
+                </a>
+            </span>
+            <!--a class="headerlink" href="#id1" title="Permalink to this image"></a-->
+        </p>
+    <!--/div-->
+</div>
+
+<div class="mkd-glr-thumbcontainer" tooltip="Show a Matplotlib animation, which should end up nicely embedded below.">
+    <!--div class="figure align-default" id="id1"-->
+        <img alt="Matplotlib animation support" src="images/thumb/mkd_glr_plot_08_animations_thumb.gif" />
+        <p class="caption">
+            <span class="caption-text">
+                <a class="reference internal" href="plot_08_animations">
+                    <span class="std std-ref">Matplotlib animation support</span>
+                </a>
+            </span>
+            <!--a class="headerlink" href="#id1" title="Permalink to this image"></a-->
+        </p>
+    <!--/div-->
+</div>
+
+<div class="mkd-glr-thumbcontainer" tooltip="Mkdocs-Gallery supports examples made with the [mayavi library](http://docs.enthought.com/mayav...">
+    <!--div class="figure align-default" id="id1"-->
+        <img alt="Example with the mayavi graphing library" src="images/thumb/mkd_glr_plot_10_mayavi_thumb.png" />
+        <p class="caption">
+            <span class="caption-text">
+                <a class="reference internal" href="plot_10_mayavi">
+                    <span class="std std-ref">Example with the mayavi graphing library</span>
+                </a>
+            </span>
+            <!--a class="headerlink" href="#id1" title="Permalink to this image"></a-->
+        </p>
+    <!--/div-->
+</div>
