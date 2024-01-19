@@ -984,7 +984,7 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <h1 id="example-with-the-pyvista-3d-plotting-library">Example with the pyvista 3d plotting library<a class="headerlink" href="#example-with-the-pyvista-3d-plotting-library" title="Permanent link">&para;</a></h1>
 <p>Mkdocs-Gallery supports examples made with the
-<a href="https://docs.pyvista.org/version/stable/">pyvista library</a>.</p>
+<a href="https://docs.pyvista.org/version/stable/">pyvista library</a>. </p>
 <p>In order to use pyvista, the <a href="../../../#b-advanced"><code>conf_script</code> of the project</a> should include the
 following lines to adequatly configure pyvista:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pyvista</span>
@@ -1035,12 +1035,12 @@ following lines to adequatly configure pyvista:</p>
 
 <div class="highlight"><pre><span></span><code><span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">()</span>
 <span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
-<span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">sphere</span><span class="p">)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">sphere</span><span class="p">,</span> <span class="n">show_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tan&quot;</span><span class="p">)</span>
 <span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
-<iframe src='../static_viewer.html?fileURL=../images/mkd_glr_plot_11_pyvista_002.vtksz' width='100%%' height='400px' frameborder='0'></iframe>
+<iframe src='../static_viewer.html?fileURL=images/mkd_glr_plot_11_pyvista_002.vtksz' width='100%%' height='400px' frameborder='0'></iframe>
 
-<p><strong>Total running time of the script:</strong> ( 0 minutes  4.643 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  4.627 seconds)</p>
 <div id="download_links"></div>
 
 <p><a class="center" href="https://mybinder.org/v2/gh/smarie/mkdocs-gallery/gh-pages?urlpath=lab/tree/notebooks/generated/gallery/plot_11_pyvista.ipynb"><img alt="Launch binder" src="../images/binder_badge_logo.svg" /></a></p>
