@@ -35,6 +35,7 @@ __all__ = [
     "matplotlib_scraper",
     "mayavi_scraper",
     "pyvista_scraper",
+    "pyvista_dynamic_scraper",
 ]
 
 
@@ -346,6 +347,7 @@ def pyvista_scraper(block, script: GalleryScript):
     """
     import pyvista as pv
     import pyvista.plotting as pv_plt
+    from pyvista.plotting.utilities.sphinx_gallery import generate_images, html_rst
     import shutil
 
     if not pv.BUILDING_GALLERY:
@@ -354,30 +356,69 @@ def pyvista_scraper(block, script: GalleryScript):
         raise RuntimeError("set pyvista.OFF_SCREEN=True to use the pyvista image scraper.")
 
     image_path_iterator = script.run_vars.image_path_iterator
-    image_paths = list()
-    try:
-        # pyvista >= 0.40
-        figures = pv_plt.plotter._ALL_PLOTTERS
-    except AttributeError:
-        # pyvista < 0.40
-        figures = pv_plt._ALL_PLOTTERS
-    for _, plotter in figures.items():
-        fname = next(image_path_iterator)
-        if hasattr(plotter, "_gif_filename"):
-            # move gif to fname
-            fname = fname.with_suffix('').with_suffix(".gif")
-            shutil.move(plotter._gif_filename, fname)
-        else:
-            plotter.screenshot(fname)
-        image_paths.append(fname)
-    pv.close_all()  # close and clear all plotters
+    image_paths = generate_images(image_path_iterator, dynamic=False)
+    image_paths = [Path(image_path) for image_path in image_paths]
+
+
+    # image_paths = list()
+    # try:
+    #     # pyvista >= 0.40
+    #     figures = pv_plt.plotter._ALL_PLOTTERS
+    # except AttributeError:
+    #     # pyvista < 0.40
+    #     figures = pv_plt._ALL_PLOTTERS
+    # for _, plotter in figures.items():
+    #     fname = next(image_path_iterator)
+    #     if hasattr(plotter, "_gif_filename"):
+    #         # move gif to fname
+    #         fname = fname.with_suffix('').with_suffix(".gif")
+    #         shutil.move(plotter._gif_filename, fname)
+    #     else:
+    #         plotter.screenshot(fname)
+    #     image_paths.append(fname)
+    # pv.close_all()  # close and clear all plotters
+
+
     return figure_md_or_html(image_paths, script)
+
+def pyvista_dynamic_scraper(block, script: GalleryScript):
+    """Scrape PyVista animated scenes.
+
+    Parameters
+    ----------
+    block : tuple
+        A tuple containing the (label, content, line_number) of the block.
+
+    script : GalleryScript
+        Script being run
+
+    Returns
+    -------
+    md : str
+        The ReSTructuredText that will be rendered to HTML containing
+        the images. This is often produced by :func:`figure_md_or_html`.
+    """
+    import pyvista as pv
+    import pyvista.plotting as pv_plt
+    from pyvista.plotting.utilities.sphinx_gallery import generate_images
+    import shutil
+
+    if not pv.BUILDING_GALLERY:
+        raise RuntimeError(pv.BUILDING_GALLERY_ERROR_MSG)
+    if not pv.OFF_SCREEN:
+        raise RuntimeError("set pyvista.OFF_SCREEN=True to use the pyvista image scraper.")
+
+    image_path_iterator = script.run_vars.image_path_iterator
+    image_paths = generate_images(image_path_iterator, dynamic=True)
+    image_paths = [Path(image_path) for image_path in image_paths]
+    return animation_html(image_paths, script)
 
 
 _scraper_dict = dict(
     matplotlib=matplotlib_scraper,
     mayavi=mayavi_scraper,
     pyvista=pyvista_scraper,
+    pyvista_dynamic=pyvista_dynamic_scraper,
 )
 
 
@@ -449,6 +490,70 @@ def save_figures(block, script: GalleryScript):
 
 
 PREFIX_LEN = len("mkd_glr_")
+
+
+def animation_html(
+    figure_paths: List[Path],
+    script: GalleryScript,
+    fig_titles: str = "",
+    srcsetpaths: List[Dict[float, Path]] = None,
+    raw_html=False,
+):
+
+    if srcsetpaths is None:
+        # this should never happen, but figure_md_or_html is public, so
+        # this has to be a kwarg...
+        srcsetpaths = [{0: fl} for fl in figure_paths]
+
+    # Get all images relative to the website sources root
+    sources_dir = script.gallery.all_info.mkdocs_docs_dir
+    script_md_dir = script.gallery.generated_dir
+
+    # Get alt text
+    alt = ""
+    if fig_titles:
+        alt = fig_titles
+    elif figure_paths:
+        file_name = os.path.split(str(figure_paths[0]))[1]
+        # remove ext & 'mkd_glr_' from start & n#'s from end
+        if file_name.endswith(".vtksz"):
+            file_name_noext = os.path.splitext(file_name)[0][PREFIX_LEN:-6]
+        else:
+            return figure_md_or_html(figure_paths, script=script)
+        # replace - & _ with \s
+        file_name_final = re.sub(r"[-,_]", " ", file_name_noext)
+        alt = file_name_final
+
+    alt = _single_line_sanitize(alt)
+
+
+    if len(figure_paths) == 1:
+        figure_path = figure_paths[0]
+        hinames = srcsetpaths[0]
+        srcset = _get_srcset_st(script_md_dir, hinames)
+        figure_path_rel_to_script_md_dir = figure_path.relative_to(script_md_dir).as_posix().lstrip("/")
+
+
+        from trame_vtk.tools.vtksz2html import HTML_VIEWER_PATH
+        import shutil
+
+        if not Path(script.gallery.generated_dir, os.path.basename(HTML_VIEWER_PATH)).exists():
+                shutil.copy(HTML_VIEWER_PATH, script.gallery.generated_dir)
+
+
+        viewer_path = Path(script.gallery.generated_dir, os.path.basename(HTML_VIEWER_PATH))
+        viewer_path_rel_to_script_md_dir = viewer_path.relative_to(script_md_dir).as_posix().lstrip("/")
+
+        images_html = f"<iframe src='../{viewer_path_rel_to_script_md_dir}?fileURL={figure_path_rel_to_script_md_dir}' width='100%%' height='400px' frameborder='0'></iframe>"
+
+
+    elif len(figure_paths) > 1:
+        raise NotImplementedError("Support for multiple animations is not yet available.")
+
+    else:
+        return ""
+
+    return images_html
 
 
 def figure_md_or_html(
