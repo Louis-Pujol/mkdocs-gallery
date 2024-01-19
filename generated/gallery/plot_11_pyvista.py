@@ -3,7 +3,7 @@ Example with the pyvista 3d plotting library
 ============================================
 
 Mkdocs-Gallery supports examples made with the
-[pyvista library](https://docs.pyvista.org/version/stable/). 
+[pyvista library](https://docs.pyvista.org/version/stable/).
 
 In order to use pyvista, the [`conf_script` of the project](../../index.md#b-advanced) should include the
 following lines to adequatly configure pyvista:
@@ -51,5 +51,5 @@ pl.show()
 
 sphere = pv.Sphere()
 pl = pv.Plotter()
-pl.add_mesh(sphere, show_edges=True, color="tan")
+pl.add_mesh(sphere)
 pl.show()
