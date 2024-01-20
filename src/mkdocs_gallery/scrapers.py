@@ -346,7 +346,11 @@ def pyvista_scraper(block, script: GalleryScript):
         The ReSTructuredText that will be rendered to HTML containing
         the images. This is often produced by :func:`figure_md_or_html`.
     """
-    import pyvista as pv
+    try:
+        import pyvista as pv
+    except ModuleNotFoundError:
+        warn("No module named 'pyvista', skipping pyvista image scraper.")
+        return ""
     import pyvista.plotting as pv_plt
     from pyvista.plotting.utilities.sphinx_gallery import generate_images, html_rst
     import shutil
@@ -379,7 +383,17 @@ def pyvista_dynamic_scraper(block, script: GalleryScript):
         The ReSTructuredText that will be rendered to HTML containing
         the images. This is often produced by :func:`figure_md_or_html`.
     """
-    import pyvista as pv
+    try:
+        import pyvista as pv
+    except ModuleNotFoundError:
+        warn("No module named 'pyvista', skipping pyvista image scraper.")
+        return ""
+
+    try:
+        import trame_vtk
+    except ModuleNotFoundError:
+        warn("No module named 'trame_vtk', switching to static pyvista scraper.")
+        return pyvista_scraper(block, script)
     import pyvista.plotting as pv_plt
     from pyvista.plotting.utilities.sphinx_gallery import generate_images
     import shutil
@@ -519,6 +533,12 @@ def animation_html(
     raw_html=False,
 ):
 
+    try:
+        from trame_vtk.tools.vtksz2html import HTML_VIEWER_PATH
+    except ModuleNotFoundError:
+        warn("No module named 'trame_vtk', skipping pyvista dynamic image scraper.")
+        return ""
+
     if srcsetpaths is None:
         # this should never happen, but figure_md_or_html is public, so
         # this has to be a kwarg...
@@ -553,7 +573,6 @@ def animation_html(
         figure_path_rel_to_script_md_dir = figure_path.relative_to(script_md_dir).as_posix().lstrip("/")
 
 
-        from trame_vtk.tools.vtksz2html import HTML_VIEWER_PATH
         import shutil
 
         if not Path(script.gallery.generated_dir, os.path.basename(HTML_VIEWER_PATH)).exists():
@@ -567,9 +586,6 @@ def animation_html(
 
         srcsetpaths_png = [{k: Path(str(v).replace(".vtksz", ".png")) for k, v in d.items()} for d in srcsetpaths]
         static_img = figure_md_or_html([figure_path.with_suffix(".png")], script, fig_titles, srcsetpaths=srcsetpaths_png, raw_html=True)
-
-        print(static_img)
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
 
         lines = [
