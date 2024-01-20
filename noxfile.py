@@ -103,7 +103,7 @@ def tests(session: PowerSession, coverage, pkg_specs):
         with open("mkdocs-no-mayavi.yml", "w") as f:
             for line in mkdocs_config:
                 if line == "      expected_failing_examples:\n":
-                    line = line + "         - docs/examples/plot_10_mayavi.py\n"
+                    line = line + "         - examples/plot_10_mayavi.py\n"
                 f.write(line)
 
     # install CI-only dependencies
@@ -218,6 +218,7 @@ MKDOCS_GALLERY_EXAMPLES_REQS = [
 ]
 MKDOCS_GALLERY_EXAMPLES_MAYAVI_REQS = [
     "PyQt5",  # PyQt is required for the mayavi backend
+    # Note: installing Mayavi from PyPi does not seem to work on GHA CI.
     "git+https://github.com/enthought/mayavi.git",  # we want mayavi>=4.7.4 when available due to https://github.com/enthought/mayavi/pull/1272
 ]
 

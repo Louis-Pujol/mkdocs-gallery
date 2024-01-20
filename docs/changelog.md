@@ -1,8 +1,13 @@
 # Changelog
 
+
+### 0.10.0 - Support for asynchronous code
+
+- Gallery scripts now support top-level asynchronous code. PR [#90](https://github.com/smarie/mkdocs-gallery/pull/90) by [pmeier](https://github.com/pmeier)
+
 ### 0.9.0 - Pyvista
 
-- Pyvista can now be used in gallery examples as in `sphinx-gallery`. PR [#91](hhttps://github.com/smarie/mkdocs-gallery/pull/91) by [Louis-Pujol](https://github.com/Louis-Pujol)
+- Pyvista can now be used in gallery examples as in `sphinx-gallery`. PR [#91](https://github.com/smarie/mkdocs-gallery/pull/91) by [Louis-Pujol](https://github.com/Louis-Pujol)
 
 ### 0.8.0 - Mayavi
 
