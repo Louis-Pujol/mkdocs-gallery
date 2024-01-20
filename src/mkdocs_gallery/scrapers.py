@@ -36,6 +36,7 @@ __all__ = [
     "mayavi_scraper",
     "pyvista_scraper",
     "pyvista_dynamic_scraper",
+    "vedo",
 ]
 
 
@@ -359,26 +360,6 @@ def pyvista_scraper(block, script: GalleryScript):
     image_paths = generate_images(image_path_iterator, dynamic=False)
     image_paths = [Path(image_path) for image_path in image_paths]
 
-
-    # image_paths = list()
-    # try:
-    #     # pyvista >= 0.40
-    #     figures = pv_plt.plotter._ALL_PLOTTERS
-    # except AttributeError:
-    #     # pyvista < 0.40
-    #     figures = pv_plt._ALL_PLOTTERS
-    # for _, plotter in figures.items():
-    #     fname = next(image_path_iterator)
-    #     if hasattr(plotter, "_gif_filename"):
-    #         # move gif to fname
-    #         fname = fname.with_suffix('').with_suffix(".gif")
-    #         shutil.move(plotter._gif_filename, fname)
-    #     else:
-    #         plotter.screenshot(fname)
-    #     image_paths.append(fname)
-    # pv.close_all()  # close and clear all plotters
-
-
     return figure_md_or_html(image_paths, script)
 
 def pyvista_dynamic_scraper(block, script: GalleryScript):
@@ -413,12 +394,50 @@ def pyvista_dynamic_scraper(block, script: GalleryScript):
     image_paths = [Path(image_path) for image_path in image_paths]
     return animation_html(image_paths, script)
 
+def vedo_scraper(block, script: GalleryScript):
+    """Scrape vedo image.
+
+    Parameters
+    ----------
+    block : tuple
+        A tuple containing the (label, content, line_number) of the block.
+
+    script : GalleryScript
+        Script being run
+
+    Returns
+    -------
+    md : str
+        The ReSTructuredText that will be rendered to HTML containing
+        the images. This is often produced by :func:`figure_md_or_html`.
+    """
+
+    import vedo
+    plotter = vedo.plotter_instance
+
+    if plotter is not None:
+
+        if not plotter.offscreen:
+            raise RuntimeError("set vedo.plotter.offscreen=True to"
+                               + " use the vedo image scraper.")
+
+        image_paths = list()
+        fname = next(script.run_vars.image_path_iterator)
+        plotter.screenshot(fname)
+        image_paths.append(fname)
+        plotter.close()
+        return figure_md_or_html(image_paths, script)
+
+    else:
+        return figure_md_or_html(list(), script)
+
 
 _scraper_dict = dict(
     matplotlib=matplotlib_scraper,
     mayavi=mayavi_scraper,
     pyvista=pyvista_scraper,
     pyvista_dynamic=pyvista_dynamic_scraper,
+    vedo=vedo_scraper,
 )
 
 
