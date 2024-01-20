@@ -1,5 +1,6 @@
 # Changelog
 
+
 ### 0.10.0 - Support for asynchronous code
 
 - Gallery scripts now support top-level asynchronous code. PR [#90](https://github.com/smarie/mkdocs-gallery/pull/90) by [pmeier](https://github.com/pmeier)

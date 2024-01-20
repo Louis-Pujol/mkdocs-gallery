@@ -36,7 +36,7 @@ __all__ = [
     "mayavi_scraper",
     "pyvista_scraper",
     "pyvista_dynamic_scraper",
-    "vedo",
+    "vedo_scraper",
 ]
 
 
@@ -394,6 +394,7 @@ def pyvista_dynamic_scraper(block, script: GalleryScript):
     image_paths = [Path(image_path) for image_path in image_paths]
     return animation_html(image_paths, script)
 
+ 
 def vedo_scraper(block, script: GalleryScript):
     """Scrape vedo image.
 
@@ -427,7 +428,6 @@ def vedo_scraper(block, script: GalleryScript):
         image_paths.append(fname)
         plotter.close()
         return figure_md_or_html(image_paths, script)
-
     else:
         return figure_md_or_html(list(), script)
 
