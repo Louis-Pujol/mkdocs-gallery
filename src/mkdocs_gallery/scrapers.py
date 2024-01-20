@@ -394,7 +394,7 @@ def pyvista_dynamic_scraper(block, script: GalleryScript):
     image_paths = [Path(image_path) for image_path in image_paths]
     return animation_html(image_paths, script)
 
- 
+
 def vedo_scraper(block, script: GalleryScript):
     """Scrape vedo image.
 
@@ -563,7 +563,33 @@ def animation_html(
         viewer_path = Path(script.gallery.generated_dir, os.path.basename(HTML_VIEWER_PATH))
         viewer_path_rel_to_script_md_dir = viewer_path.relative_to(script_md_dir).as_posix().lstrip("/")
 
-        images_html = f"<iframe src='../{viewer_path_rel_to_script_md_dir}?fileURL={figure_path_rel_to_script_md_dir}' width='100%%' height='400px' frameborder='0'></iframe>"
+        trame_widget = f"<iframe src='../{viewer_path_rel_to_script_md_dir}?fileURL={figure_path_rel_to_script_md_dir}' width='100%%' height='400px' frameborder='0'></iframe>"
+
+        srcsetpaths_png = [{k: Path(str(v).replace(".vtksz", ".png")) for k, v in d.items()} for d in srcsetpaths]
+        static_img = figure_md_or_html([figure_path.with_suffix(".png")], script, fig_titles, srcsetpaths=srcsetpaths_png, raw_html=True)
+
+        print(static_img)
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+
+        lines = [
+            "<div class=\"sd-tab-set docutils\">",
+            "<input checked=\"checked\" id=\"sd-tab-item-0\" name=\"sd-tab-set-0\" type=\"radio\"></input>",
+            "<label class=\"sd-tab-label\" for=\"sd-tab-item-0\">Static Scene</label>",
+            "<div class=\"sd-tab-content docutils\">",
+            static_img,
+            "</div>",
+            "<input id=\"sd-tab-item-1\" name=\"sd-tab-set-0\" type=\"radio\"></input>",
+            "<label class=\"sd-tab-label\" for=\"sd-tab-item-1\">Interactive Scene</label>",
+            "<div class=\"sd-tab-content docutils\">",
+            trame_widget,
+            "</div>",
+            "</div>",
+        ]
+
+        images_html = "\n".join(lines)
+
+
 
 
     elif len(figure_paths) > 1:
