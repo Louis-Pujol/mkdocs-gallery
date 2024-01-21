@@ -75,70 +75,6 @@ def _import_matplotlib():
 
     return matplotlib, plt
 
-def _import_generate_images():
-
-    try:
-        from pyvista.plotting.utilities.sphinx_gallery import generate_images
-        return generate_images
-
-    except ModuleNotFoundError:
-        # If generate_images is not available, a very ugly copy/paste of the function is done here
-        # this will be obsolete in next pyvista release
-        import pyvista
-        from pyvista.utilities.sphinx_gallery import _process_events_before_scraping
-        import shutil
-        from typing import Iterator, List
-        def generate_images(image_path_iterator: Iterator[str], dynamic: bool = False) -> List[str]:
-            """Generate images from the current plotters.
-
-            The file names are taken from the ``image_path_iterator`` iterator.
-
-            A gif will be created if a plotter has a ``_gif_filename`` attribute.
-            Otherwise, depending on the value of ``dynamic``, either a ``.png`` static image
-            or a ``.vtksz`` file will be created.
-
-            Parameters
-            ----------
-            image_path_iterator : Iterator[str]
-                An iterator that yields the path to the next image to be saved.
-
-            dynamic : bool, default: False
-                Whether to save a static ``.png`` image or a ``.vtksz`` (interactive)
-                file.
-
-            Returns
-            -------
-            list[str]
-                A list of the names of the images that were created.
-            """
-            image_names = []
-            figures = pyvista.plotting.plotter._ALL_PLOTTERS
-            for plotter in figures.values():
-                _process_events_before_scraping(plotter)
-                fname = next(image_path_iterator)
-                # Make sure the extension is "png"
-                fname_withoutextension, _ = os.path.splitext(fname)
-                fname = fname_withoutextension + ".png"
-
-                if hasattr(plotter, "_gif_filename"):
-                    # move gif to fname
-                    fname = fname[:-3] + "gif"
-                    shutil.move(plotter._gif_filename, fname)
-                    image_names.append(fname)
-                else:
-                    plotter.screenshot(fname)
-                    if not dynamic or plotter.last_vtksz is None:
-                        image_names.append(fname)
-                    else:  # pragma: no cover
-                        fname = fname[:-3] + "vtksz"
-                        with open(fname, "wb") as f:
-                            f.write(plotter.last_vtksz)
-                            image_names.append(fname)
-
-            pyvista.close_all()  # close and clear all plotters
-            return image_names
-
-        return generate_images
 
 def _matplotlib_fig_titles(fig):
     titles = []
@@ -416,7 +352,7 @@ def pyvista_scraper(block, script: GalleryScript):
         warn("No module named 'pyvista', skipping pyvista image scraper.")
         return ""
 
-    generate_images = _import_generate_images()
+    from .pyvista_retrocompatibility import generate_images
 
     if not pv.BUILDING_GALLERY:
         raise RuntimeError(pv.BUILDING_GALLERY_ERROR_MSG)
@@ -457,7 +393,7 @@ def pyvista_dynamic_scraper(block, script: GalleryScript):
     except ModuleNotFoundError:
         warn("No module named 'trame_vtk', switching to static pyvista scraper.")
         return pyvista_scraper(block, script)
-    generate_images = _import_generate_images()
+    from .pyvista_retrocompatibility import generate_images
 
     if not pv.BUILDING_GALLERY:
         raise RuntimeError(pv.BUILDING_GALLERY_ERROR_MSG)
