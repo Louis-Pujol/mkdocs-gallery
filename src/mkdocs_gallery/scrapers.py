@@ -587,21 +587,29 @@ def animation_html(
         srcsetpaths_png = [{k: Path(str(v).replace(".vtksz", ".png")) for k, v in d.items()} for d in srcsetpaths]
         static_img = figure_md_or_html([figure_path.with_suffix(".png")], script, fig_titles, srcsetpaths=srcsetpaths_png, raw_html=True)
 
-
+        # Mkdocs version (https://squidfunk.github.io/mkdocs-material/reference/content-tabs/)
         lines = [
-            "<div class=\"sd-tab-set docutils\">",
-            "<input checked=\"checked\" id=\"sd-tab-item-0\" name=\"sd-tab-set-0\" type=\"radio\"></input>",
-            "<label class=\"sd-tab-label\" for=\"sd-tab-item-0\">Static Scene</label>",
-            "<div class=\"sd-tab-content docutils\">",
-            static_img,
-            "</div>",
-            "<input id=\"sd-tab-item-1\" name=\"sd-tab-set-0\" type=\"radio\"></input>",
-            "<label class=\"sd-tab-label\" for=\"sd-tab-item-1\">Interactive Scene</label>",
-            "<div class=\"sd-tab-content docutils\">",
-            trame_widget,
-            "</div>",
-            "</div>",
+            "=== \"Static Scene\"",
+            "    " + static_img,
+            "=== \"Interactive Scene\"",
+            "    " + trame_widget,
         ]
+
+        # PyVista version (need to add a js script to the mkdocs.yml)
+        # lines = [
+        #     "<div class=\"sd-tab-set docutils\">",
+        #     "<input checked=\"checked\" id=\"sd-tab-item-0\" name=\"sd-tab-set-0\" type=\"radio\"></input>",
+        #     "<label class=\"sd-tab-label\" for=\"sd-tab-item-0\">Static Scene</label>",
+        #     "<div class=\"sd-tab-content docutils\">",
+        #     static_img,
+        #     "</div>",
+        #     "<input id=\"sd-tab-item-1\" name=\"sd-tab-set-0\" type=\"radio\"></input>",
+        #     "<label class=\"sd-tab-label\" for=\"sd-tab-item-1\">Interactive Scene</label>",
+        #     "<div class=\"sd-tab-content docutils\">",
+        #     trame_widget,
+        #     "</div>",
+        #     "</div>",
+        # ]
 
         images_html = "\n".join(lines)
 
